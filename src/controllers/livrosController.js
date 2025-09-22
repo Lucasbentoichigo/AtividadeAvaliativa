@@ -2,24 +2,14 @@ import dados from "../models/dados.js"
 const { livros } = dados;
 
 const getAllLivros = (req,res) => {
-    const { titulo, autor, isbn, categoria, anopublicacao, disponivel, editora } = req.query
+    const { autor, categoria, anopublicacao, disponivel } = req.query
 
     let resultado = livros;
-
-    if (titulo) {
-        resultado = resultado.filter((l) => 
-            l.titulo.toLowerCase().includes(titulo.toLowerCase())
-        );
-    }
 
     if (autor) {
         resultado = resultado.filter((l) => 
             l.autor.toLowerCase().includes(autor.toLowerCase())
         );
-    }
-
-    if (isbn) {
-        resultado = resultado.filter(l => l.isbn == isbn);
     }
 
     if (categoria) {
@@ -34,12 +24,6 @@ const getAllLivros = (req,res) => {
 
     if (disponivel !== undefined) {
         resultado = resultado.filter((l) => l.disponivel === (disponivel === 'true'));
-    }
-
-    if (editora) {
-        resultado = resultado.filter((l) => 
-            l.editora.toLowerCase().includes(editora.toLowerCase())
-        );
     }
 
     res.status(200).json({
@@ -61,7 +45,7 @@ const getLivrosById = (req,res) => {
     }
     res.status(200).json({
         sucess: true,
-        livro: livro
+        data: livro
     })
 }
 
@@ -119,6 +103,20 @@ if (!titulo || !autor || !isbn || !categoria || !anopublicacao || !disponivel ||
     }
 }
 
+if (isbn.length < isbn.lenght) {
+    return res.status(400).json({
+        success: false,
+        message: "O isbn necessita ter de 10 a 13 digitos numéricos"
+    })
+}
+
+if (anopublicacao > 2025) {
+    return res.status(400).json({
+        success: false,
+        message: "O ano de publicação não pode ser superior ao ano atual"
+    })
+}
+
 const novoLivro = {
     id: livros.length + 1,
     titulo: titulo,
@@ -139,5 +137,37 @@ res.status(201).json({
 })
 }
 
+const deleteLivros = (req, res) => {
+    const { id } = req.params
 
-export { getAllLivros, getLivrosById, createLivros};
+    if (isNaN(id)) {
+        return res.status(400).json({
+            success: false,
+            message: "O id deve ser válido"
+        });
+    }
+
+    const idParaApagar = parseInt(id);
+
+    const livroParaRemover = livros.find(l => l.id === idParaApagar);
+    console.log(livroParaRemover)
+
+    if (!livroParaRemover) {
+        return res.status(404).json({
+            success: false,
+            message: "O id do livro não existe"
+        });
+    }
+
+    const livroFiltrado = livros.filter(l => l.id !== id);
+    console.log(livroFiltrado)
+
+    livros.splice(0, livros.length, ...livroFiltrado);
+
+    return res.status(200).json({
+        success: true,
+        message: "O livro foi removido com sucesso!"
+    })
+}
+
+export { getAllLivros, getLivrosById, createLivros, deleteLivros};
