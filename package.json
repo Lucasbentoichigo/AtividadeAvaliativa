@@ -1,0 +1,23 @@
+{
+  "name": "atividadeavaliativa_lucastavaresbento",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "Senai",
+    "Node",
+    "Backend"
+  ],
+  "author": "Lucas",
+  "license": "MIT",
+  "description": "Atividade Avaliativa sobre Backend",
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  }
+}
