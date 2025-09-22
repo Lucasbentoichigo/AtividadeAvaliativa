@@ -2,7 +2,7 @@ import dados from "../models/dados.js"
 const { livros } = dados;
 
 const getAllLivros = (req,res) => {
-    const { autor, categoria, anopublicacao, disponivel } = req.query
+    const { titulo, autor, isbn, categoria, anopublicacao, disponivel, editora } = req.query
 
     let resultado = livros;
 
@@ -170,4 +170,65 @@ const deleteLivros = (req, res) => {
     })
 }
 
-export { getAllLivros, getLivrosById, createLivros, deleteLivros};
+const updateLivro = (req, res) => {
+    const id = parseInt(req.params.id);
+    const { titulo, autor, isbn, categoria, anopublicacao, disponivel, editora} = req.body;
+
+    if (isNaN(id)) {
+        return res.status(400).json({
+            success: false,
+            message: "O id deve ser válido"
+        });
+    }
+
+    const livroExiste = livros.find(l => l.id === id);
+
+    if (!livroExiste) {
+        return res.status(404).json({
+            success: false,
+            message: "Livro não existe"
+        });
+    }
+
+    if (isbn.length < isbn.lenght) {
+        return res.status(400).json({
+            success: false,
+            message: "O isbn necessita ter de 10 a 13 digitos numéricos"
+        })
+    }
+    
+    if (anopublicacao > 2025) {
+        return res.status(400).json({
+            success: false,
+            message: "O ano de publicação não pode ser superior ao ano atual"
+        })
+    }
+
+    const livrosAtualizados = livros.map(livro =>
+        livro.id === id
+            ? {
+                ...livro,
+                ...(titulo && { titulo }),
+                ...(autor && { autor }),
+                ...(isbn && { isbn }),
+                ...(categoria && { categoria }),
+                ...(anopublicacao && { anopublicacao }),
+                ...(disponivel && { disponivel}),
+                ...(editora && { editora})
+            }
+            : livro
+    );
+
+    livros.splice(0, livros.length, ...livrosAtualizados);
+
+    const livroAtualizado = livros.find(l => l.id === id);
+
+    res.status(200).json({
+        success: true,
+        message: "Livro atualizado com sucesso",
+        livro: livroAtualizado
+    })
+
+}
+
+export { getAllLivros, getLivrosById, createLivros, deleteLivros, updateLivro};
