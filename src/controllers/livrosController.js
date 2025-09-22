@@ -48,4 +48,15 @@ const getAllLivros = (req,res) => {
     })
 }
 
-export { getAllLivros };
+const getLivrosById = (req,res) => {
+    let id = parseInt(req.params.id);
+
+    const livro = livros.find(l => l.id === id);
+
+    res.status(200).json({
+        sucess: true,
+        livro: livro
+    })
+}
+
+export { getAllLivros, getLivrosById};
