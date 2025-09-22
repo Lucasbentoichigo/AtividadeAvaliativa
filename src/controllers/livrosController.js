@@ -136,36 +136,24 @@ res.status(201).json({
 })
 }
 
-const deleteLivros = (req, res) => {
-    const { id } = req.params
+const deleteLivros = (req,res) => {
+    let id = parseInt(req.params.id);
 
-    if (isNaN(id)) {
-        return res.status(400).json({
-            success: false,
-            message: "O id deve ser válido"
-        });
-    }
-
-    const idParaApagar = parseInt(id);
-
-    const livroParaRemover = livros.find(l => l.id === idParaApagar);
-    console.log(livroParaRemover)
+    const livroParaRemover = livros.find(l => l.id === id);
 
     if (!livroParaRemover) {
         return res.status(404).json({
-            success: false,
-            message: "O id do livro não existe"
-        });
+            sucess: false,
+            message: `Esse livro não existe, ${id}`
+        })
     }
-
-    const livroFiltrado = livros.filter(l => l.id !== id);
-    console.log(livroFiltrado)
-
-    livros.splice(0, livros.length, ...livroFiltrado);
-
-    return res.status(200).json({
-        success: true,
-        message: "O livro foi removido com sucesso!"
+    const livrosFiltrados = livros.filter(livro => livro.id != id);
+    
+    livros.splice(0, livros.length, ...livrosFiltrados)
+    res.status(200).json({
+        sucess: true,
+        message: "O livro foi removido com sucesso",
+        livroRemovido : livroParaRemover
     })
 }
 
