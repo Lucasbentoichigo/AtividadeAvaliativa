@@ -1,0 +1,1 @@
+# Um sistema para gerenciar o acervo de livros de uma biblioteca, controlando empréstimos, devoluções e disponibilidade dos exemplares.
