@@ -51,8 +51,7 @@ const getLivrosById = (req,res) => {
 
 const createLivros = (req,res) => {
     const { titulo, autor, isbn, categoria, anopublicacao, disponivel, editora } = req.body
-
-if (!titulo || !autor || !isbn || !categoria || !anopublicacao || !disponivel || !editora) {
+     {
     if (!titulo) {
         return res.status(400).json({
             success: false,
@@ -103,17 +102,17 @@ if (!titulo || !autor || !isbn || !categoria || !anopublicacao || !disponivel ||
     }
 }
 
-if (isbn.length < isbn.lenght) {
-    return res.status(400).json({
-        success: false,
-        message: "O isbn necessita ter de 10 a 13 digitos numéricos"
-    })
-}
-
 if (anopublicacao > 2025) {
     return res.status(400).json({
         success: false,
         message: "O ano de publicação não pode ser superior ao ano atual"
+    })
+}
+
+if (isbn.length < 10 || isbn.length > 13) {
+    return res.status(400).json({
+        success: false,
+        message: "O isbn deve ter exatamente 10 ou 13 dígitos numéricos"
     })
 }
 
@@ -189,18 +188,18 @@ const updateLivro = (req, res) => {
             message: "Livro não existe"
         });
     }
-
-    if (isbn.length < isbn.lenght) {
-        return res.status(400).json({
-            success: false,
-            message: "O isbn necessita ter de 10 a 13 digitos numéricos"
-        })
-    }
     
     if (anopublicacao > 2025) {
         return res.status(400).json({
             success: false,
             message: "O ano de publicação não pode ser superior ao ano atual"
+        })
+    }
+
+    if (isbn.length < 10 || isbn.length > 13) {
+        return res.status(400).json({
+            success: false,
+            message: "O isbn deve ter exatamente 10 ou 13 dígitos numéricos"
         })
     }
 
